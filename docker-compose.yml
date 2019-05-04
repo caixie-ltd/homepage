@@ -1,0 +1,28 @@
+version: '3.5'
+services:
+  caixie.home:
+    image: flashspys/nginx-static
+    restart: always
+    expose:
+      - 80
+    networks:
+      - traefik
+    labels:
+      - "traefik.backend=caixie.home"
+      - "traefik.docker.network=traefik"
+      - "traefik.enable=true"
+      - "traefik.passHostHeader=true"
+      - "traefik.frontend.priority=10"
+      - "traefik.port=80"
+      - "traefik.frontend.entryPoints=https,http"
+      - "traefik.frontend.rule=Host:caixie.top, caixie.ltd, www.caixie.top, www.caixie.ltd"
+      - "traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:*"
+      - "traefik.frontend.headers.STSSeconds=315360000"
+      - "traefik.frontend.headers.STSIncludeSubdomains=true"
+      - "traefik.frontend.headers.STSPreload=true"
+    volumes:
+      - ./mime.types:/etc/nginx/mime.types
+      - ./public:/static
+networks:
+  traefik:
+    external: true
